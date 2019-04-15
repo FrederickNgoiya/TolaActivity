@@ -697,7 +697,7 @@ class UserAdminViewSet(viewsets.ModelViewSet):
                 raise PermissionDenied
             else:
                 try:
-                    user.countryaccess_set.all().delete()
+                    #user.countryaccess_set.all().delete() # why on Earth?!?
                     for country_id, access in country_data.iteritems():
                         CountryAccess.objects.update_or_create(
                             tolauser=user,
