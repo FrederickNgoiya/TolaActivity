@@ -697,15 +697,25 @@ class UserAdminViewSet(viewsets.ModelViewSet):
                 raise PermissionDenied
             else:
                 try:
-                    user.countryaccess_set.all().delete()
                     for country_id, access in country_data.iteritems():
-                        CountryAccess.objects.update_or_create(
-                            tolauser=user,
-                            country_id=country_id,
-                            defaults={
-                                "role": access["role"],
-                            }
-                        )
+                        if access["role"] == 'basic_admin':
+                            CountryAccess.objects.update_or_create(
+                                tolauser=user,
+                                country_id=country_id,
+                                defaults={
+                                    "role": access["role"],
+                                }
+                            )
+                        else:
+                            try:
+                                old_access = CountryAccess.objects.get(
+                                    tolauser=user,
+                                    country_id=country_id,
+                                )
+                                old_access.role = access["role"]
+                                old_access.save()
+                            except ObjectDoesNotExist:
+                                pass
                 except SuspiciousOperation, e:
                     return Response({"detail": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 

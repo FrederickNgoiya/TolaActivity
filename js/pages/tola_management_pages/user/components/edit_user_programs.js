@@ -10,7 +10,7 @@ const create_country_objects = (countries, store) => Object.entries(countries)
                                                         [id]: {
                                                             ...country,
                                                             type: 'country',
-                                                            options: [{label: '', value: 'none'}, ...store.country_role_choices],
+                                                            options: store.country_role_choices,
                                                             admin_access: store.is_superuser,
                                                             programs: new Set(country.programs)
                                                         }
@@ -134,8 +134,7 @@ export default class EditUserPrograms extends React.Component {
         const access = this.state.user_program_access
         this.props.onSave({
             countries: Object.entries(access.countries)
-                             .filter(([_, country]) => this.props.store.is_superuser)
-                             .filter(([_, country]) => country.has_access)
+                             .filter(([id, country]) => this.props.store.is_superuser)
                              .reduce((countries, [id, country]) => ({...countries, [id]: country}), {}),
             programs: Object.entries(access.programs)
                             .filter(([_, program]) => program.has_access)
@@ -234,12 +233,12 @@ export default class EditUserPrograms extends React.Component {
     }
 
     changeCountryRole(country_id, new_val) {
-        const country = {...this.state.user_program_access.countries[country_id]}
+        const country = this.state.user_program_access.countries[country_id]
         const new_country_access = (() => {
-            if(new_val != 'none') {
-                return {...country, role: new_val, has_access: true}
+            if(country) {
+                return {...country, role: new_val}
             } else {
-                return {...country, role: new_val, has_access: false}
+                return {role: new_val}
             }
         })()
 
@@ -255,35 +254,20 @@ export default class EditUserPrograms extends React.Component {
 
     }
 
-    changeProgramRole(program_key, new_val) {
-        const [country_id, program_id] = program_key.split('_')
-        const access = this.state.user_program_access
+    changeProgramRole(program_id, new_val) {
+        const program_access = this.state.user_program_access.programs[program_id]
 
-
-        const new_program_access = (() => {
-            if(access[country_id] && access[country_id].has_access && new_val == 'low') {
-                return {
-                    program: program_id,
-                    country: country_id,
-                    role: new_val,
-                    has_access: false
-                }
-            } else {
-                return {
-                    program: program_id,
-                    country: country_id,
-                    role: new_val,
-                    has_access: true
-                }
-            }
-        })()
+        const new_program_access = {
+            ...program_access,
+            role: new_val
+        }
 
         this.setState({
             user_program_access: {
                 ...this.state.user_program_access,
                 programs: {
                     ...this.state.user_program_access.programs,
-                    [program_key]: new_program_access
+                    [program_id]: new_program_access
                 }
             }
         }, () => this.hasUnsavedDataAction())
@@ -346,29 +330,16 @@ export default class EditUserPrograms extends React.Component {
             if(data.type == 'country') {
                 return (access.countries[data.id] && access.countries[data.id].has_access) || false
             } else {
-                if(this.state.user_program_access.countries[data.country_id] && this.state.user_program_access.countries[data.country_id].has_access) {
-                    return true
-                }
                 return (access.programs[data.id] && access.programs[data.id].has_access) || false
             }
         }
 
         const is_check_disabled = (data) => {
             if(data.type == 'country') {
-                return !(this.state.countries[data.id].programs.size > 0)
-                    || !(
-                        this.props.store.access.countries[data.id]
-                        && this.props.store.access.countries[data.id].role == 'basic_admin'
-                    )
-                    || (
-                        this.state.user_program_access.countries[data.id]
-                        && this.state.user_program_access.countries[data.id].has_access
-                    )
-
+                return !this.state.countries[data.id].programs.size > 0
+                    || !this.props.store.access.countries[data.id]
+                    || this.props.store.access.countries[data.id].role != 'basic_admin'
             } else {
-                if(this.state.user_program_access.countries[data.country_id] && this.state.user_program_access.countries[data.country_id].has_access) {
-                    return true
-                }
                 return !this.props.store.access.countries[data.country_id] || this.props.store.access.countries[data.country_id].role != 'basic_admin'
             }
         }
@@ -380,15 +351,8 @@ export default class EditUserPrograms extends React.Component {
                 return (
                     !this.props.store.access.countries[data.country_id]
                     || this.props.store.access.countries[data.country_id].role != 'basic_admin'
-                    || (
-                        !(
-                            this.state.user_program_access.programs[data.id]
-                            && this.state.user_program_access.programs[data.id].has_access
-                        ) && !(
-                            this.state.user_program_access.countries[data.country_id]
-                            && this.state.user_program_access.countries[data.country_id].has_access
-                        )
-                    )
+                    || !this.state.user_program_access.programs[data.id]
+                    || !this.state.user_program_access.programs[data.id].has_access
                 )
             }
         }
@@ -397,7 +361,7 @@ export default class EditUserPrograms extends React.Component {
             if(data.type == 'country') {
                 const country_access = this.state.user_program_access.countries
                 if(!country_access[data.id]) {
-                    return 'none'
+                    return this.props.store.country_role_choices[0].value
                 } else {
                     return country_access[data.id].role
                 }
