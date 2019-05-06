@@ -5,36 +5,36 @@ import CheckboxedMultiSelect from 'components/checkboxed-multi-select'
 
 //we need a pretty peculiar structure to accommodate the virtualized table
 const create_country_objects = (countries, store) => Object.entries(countries)
-                                                    .reduce((countries, [id, country]) => ({
-                                                        ...countries,
-                                                        [id]: {
-                                                            ...country,
-                                                            type: 'country',
-                                                            options: [{label: gettext('Individual programs only'), value: 'none'}, ...store.country_role_choices],
-                                                            admin_access: store.is_superuser,
-                                                            programs: new Set(country.programs)
-                                                        }
-                                                    }),{})
+    .reduce((countries, [id, country]) => ({
+        ...countries,
+        [id]: {
+            ...country,
+            type: 'country',
+            options: [{label: gettext('Individual programs only'), value: 'none'}, ...store.country_role_choices],
+            admin_access: store.is_superuser,
+            programs: new Set(country.programs)
+        }
+    }),{})
 
 const create_program_objects = (programs, store) => Object.entries(programs)
-                                                           .reduce((programs, [id, program]) => ({
-                                                               ...programs,
-                                                               [id]: {
-                                                                   ...program,
-                                                                   type: 'program',
-                                                                   options: store.program_role_choices,
-                                                               }
-                                                           }),{})
+    .reduce((programs, [id, program]) => ({
+        ...programs,
+        [id]: {
+            ...program,
+            type: 'program',
+            options: store.program_role_choices,
+        }
+    }),{})
 
 //we need to flatten the country -> program heirarchy to support the virtualized table
 const flattened_listing = (countries, programs) => countries.flatMap(country =>
-                                                        [
-                                                            country,
-                                                            ...Array.from(country.programs)
-                                                                .filter(program_id => programs[program_id])
-                                                                .map(program_id => ({...programs[program_id], id: `${country.id}_${program_id}`, country_id: country.id}))
-                                                        ]
-                                                    )
+    [
+        country,
+        ...Array.from(country.programs)
+        .filter(program_id => programs[program_id])
+        .map(program_id => ({...programs[program_id], id: `${country.id}_${program_id}`, country_id: country.id}))
+    ]
+)
 
 const apply_program_filter = (programs, countries, filter_string) => {
     if(!filter_string) {
@@ -69,11 +69,11 @@ const create_user_access = (user_access) => ({
 
 const country_has_all_access = (country, visible_programs, user_program_access) =>
     Array.from(country.programs)
-            .filter(program_id => !!visible_programs[program_id])
-            .every(program_id =>
-                user_program_access.programs[`${country.id}_${program_id}`]
-                && user_program_access.programs[`${country.id}_${program_id}`].has_access
-            )
+        .filter(program_id => !!visible_programs[program_id])
+        .every(program_id =>
+            user_program_access.programs[`${country.id}_${program_id}`]
+            && user_program_access.programs[`${country.id}_${program_id}`].has_access
+        )
 
 @observer
 export default class EditUserPrograms extends React.Component {
