@@ -99,6 +99,8 @@
 @import 'components/virtualized_tables'; // Virtualized tables in Edit User (programs & roles)
 @import 'components/admin_list'; // List styles in Admin Lite
 @import 'components/folding_sidebar'; // Flyout filters for Admin lite. IPTT implementation is different
+@import 'components/iptt_table'; // the IPTT table & page
+@import 'components/sidebar'; // IPTT sidebar
 @import 'components/changelog'; // custom styles for change logs/audit logs
 @import 'components/login'; // login page
 @import 'components/react-select'; // overrides and extensions to react-select
@@ -110,8 +112,6 @@
 @import 'maps';
 @import 'charts';
 @import 'branding';
-@import 'iptt_table'; // the IPTT table & page
-@import 'sidebar'; // IPTT sidebar
 @import 'misc_utilities'; // small utility/helper selectors that should probably be bootstrap classes
 @import 'custom'; // misc. elements & unsorted selectors
 
