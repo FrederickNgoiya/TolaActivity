@@ -65,49 +65,45 @@ class TimeframeRadio extends React.Component {
         this.props.filterStore.mostRecent = e.target.value;
     }
     render() {
-        return <div className="form-row form-group">
-                    <div className="col-sm-4">
-                        <div className="form-check form-check-inline pt-1">
-                            <span className="form-check-input">
-                                <input type="radio"
-                                       checked={ this.props.filterStore.showAll }
-                                       disabled={ this.props.filterStore.periodsDisabled }
-                                       onChange={ () => {this.props.filterStore.showAll = true;} }
-                                       />
-                            </span>
-                            <label className="form-check-label">
-                                {
-                                    /* # Translators: option to show all periods for the report */
-                                    gettext('Show all')
-                                }
-                            </label>
-                        </div>
-                    </div>
-                    <div className="col-sm-4 p-0">
-                        <div className="form-check form-check-inline pt-1">
-                            <span className="form-check-input">
-                                <input type="radio"
-                                       checked={ this.props.filterStore.mostRecent }
-                                       disabled={ this.props.filterStore.periodsDisabled }
-                                       onChange={ this.checkMostRecent }
-                                       />
-                            </span>
-                            <label className="form-check-label">
-                                {
-                                    /* # Translators: option to show a number of recent periods for the report */
-                                    gettext('Most recent')
-                                }
-                            </label>
-                        </div>
-                    </div>
-                    <div className="col-sm-4">
-                        <input type="number" className="form-control"
-                               value={ this.props.filterStore.mostRecent || ''}
-                               disabled={ this.props.filterStore.periodsDisabled }
-                               onChange={ this.updateMostRecentCount }
-                               />
-                    </div>
-               </div>;
+        return <div className="form-row form-group flex-nowrap">
+            <div className="form-check-inline form-check">
+                <input type="radio"
+                    id="showAllCheck"
+                    className="form-check-input"
+                    checked={ this.props.filterStore.showAll }
+                    disabled={ this.props.filterStore.periodsDisabled }
+                    onChange={ () => {this.props.filterStore.showAll = true;} }
+                />
+                <label className="form-check-label text-nowrap" for="showAllCheck">
+                    {
+                        /* # Translators: option to show all periods for the report */
+                        gettext('Show all')
+                    }
+                </label>
+            </div>
+            <div className="form-check-inline form-check">
+                <input type="radio"
+                    id="showRecentCheck"
+                    className="form-check-input"
+                    checked={ this.props.filterStore.mostRecent }
+                    disabled={ this.props.filterStore.periodsDisabled }
+                    onChange={ this.checkMostRecent }
+                />
+                <label className="form-check-label text-nowrap" for="showRecentCheck">
+                    {
+                        /* # Translators: option to show a number of recent periods for the report */
+                        gettext('Most recent')
+                    }
+                </label>
+            </div>
+            <div className="form-check-inline ">
+                <input type="number" className="form-control"
+                    value={ this.props.filterStore.mostRecent || ''}
+                    disabled={ this.props.filterStore.periodsDisabled }
+                    onChange={ this.updateMostRecentCount }
+                />
+            </div>
+        </div>;
     }
 }
 
