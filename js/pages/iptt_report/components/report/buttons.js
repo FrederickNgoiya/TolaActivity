@@ -89,28 +89,28 @@ export class PinButton extends React.Component {
             open: false
         };
     }
-    
+
     handleClick(e) {
         this.setState({open: !this.state.open});
     }
-    
+
     handleClose(e) {
         this.setState({open: false});
     }
-    
+
     render() {
         return (
             <React.Fragment>
-                <div
+                <a href="#"
                     className="btn btn-sm btn-secondary"
                     ref="target"
                     onClick={ this.handleClick.bind(this) }>
-                <i className="fas fa-thumbtack"></i>
-                    {
-                        /* # Translators: a button that lets a user "pin" (verb) a report to their home page */
-                        gettext('Pin')
-                    }
-                </div>
+                    <i className="fas fa-thumbtack"></i>
+                        {
+                            /* # Translators: a button that lets a user "pin" (verb) a report to their home page */
+                            gettext('Pin')
+                        }
+                </a>
                 <Popover
                     placement='bottom'
                     style={ {width: 'auto' } }
@@ -133,7 +133,7 @@ class ExcelPopover extends React.Component {
             window.location=this.props.routeStore.excelUrl;
         }
     }
-    
+
     getAll = () => {
         if (this.props.routeStore.fullExcelUrl) {
             window.location=this.props.routeStore.fullExcelUrl
@@ -174,7 +174,7 @@ export class ExcelButton extends React.Component {
             open: false
         };
     }
-    
+
     handleClick = () => {
         if (this.props.filterStore.isTVA) {
             this.setState({open: !this.state.open});
@@ -182,27 +182,27 @@ export class ExcelButton extends React.Component {
             window.location=this.props.routeStore.excelUrl;
         }
     }
-    
+
     handleClose(e) {
         this.setState({open: false});
     }
     render() {
         return (
             <React.Fragment>
-                <div className="btn btn-sm btn-secondary"
+                <a href="#" className="btn btn-sm btn-secondary"
                      ref="target"
                      onClick={this.handleClick.bind(this) }>
                      <i className="fas fa-download"></i> Excel
-                     </div>
-                     <Popover
-                        placement="bottom"
-                        containerStyle={ {paddingRight: '10px'} }
-                        style={ {width: 'auto' } }
-                        target={ this.refs.target }
-                        show={ this.state.open }
-                        onHide={ this.handleClose.bind(this) } >
-                        <ExcelPopover />
-                      </Popover>
+                 </a>
+                 <Popover
+                    placement="bottom"
+                    containerStyle={ {paddingRight: '10px'} }
+                    style={ {width: 'auto' } }
+                    target={ this.refs.target }
+                    show={ this.state.open }
+                    onHide={ this.handleClose.bind(this) } >
+                    <ExcelPopover />
+                  </Popover>
             </React.Fragment>
         );
     }
