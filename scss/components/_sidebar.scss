@@ -1,11 +1,8 @@
-// IPTT Sidebar
-// Selectors for the IPTT sidebar & filters
-// Could theoretically be used elsewhere
+// legacy nested selectors for list groups in sidebar
+// Probably deprecated?
+// kept for the sake of potential regressions
 
 #sidebar {
-    //flex-basis: 1;
-    // (commenting out while working on react)overflow: hidden;
-    //z-index: 3;
     .list-group {
         min-width: 400px;
         background-color: $gray-800;
@@ -72,25 +69,7 @@
 
 
 @include media-breakpoint-down(md) {
-    .iptt_table_wrapper {
-        // padding-left: 0;
-    }
-    #id_span_iptt_date_range {
-        display: block;
-        padding-left: 45px;
-    }
     #sidebar {
-        //width: 330px;
-        //overflow-y: auto;
-        //overflow-x: visible;
-        //@include transition(all 0.2 ease);
-        //transform: translateX(40);
-        &.show {
-            //transform: translateX(0);
-        }
-        &::-webkit-scrollbar{
-            //width: 0px;
-        }
         & .list-group {
             min-width: 35px;
             overflow: visible;
@@ -118,42 +97,4 @@
 }
 
 
-// IPTT sidebar filter// Hidable side bar filter
-#filter-top {
-    background-color: $gray-700 !important;
-    color: $white;
-    /* margin-bottom: -20px; */
-}
 
-#filter-middle {
-    background-color: $gray-300;
-    margin-bottom: 0px;
-    margin-top: 0px;
-    padding-bottom: 4px;
-}
-
-#filter-bottom {
-    background-color: $gray-600 !important; // was: #808080!important;
-    color: $white;
-    font-size: smaller;
-    padding-top: 10px;
-}
-
-#id_iptt_report_filter {
-    font-size: .875rem;
-    min-width: 330px;
-    max-width: 330px;
-}
-#id_form_indicator_filter .col-form-label {
-  display: block;
-  padding-bottom: calc(.1875rem + 1px); /* TODO: this should be applied universally but regressions */
-}
-.filter-form-padding-10 {
-    width: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-.filter-title {
-    color: $gray-300;
-    line-height: 42px;
-}

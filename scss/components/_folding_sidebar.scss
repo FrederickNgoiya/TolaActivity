@@ -88,3 +88,12 @@
         transition-timing-function: ease;
     }
 }
+
+
+// not sure what this is for
+#id_span_iptt_date_range {
+    @include media-breakpoint-down(md) {
+        display: block;
+        padding-left: 45px;
+    }
+}
