@@ -38,19 +38,19 @@ const IPTTFilterForm = inject('filterStore')(
     observer(({ filterStore }) => {
         return (
             <nav id="id_iptt_report_filter">
-                <div className="p-3" id="filter-top">
-                    <h3 className="filter-title text-title-case">
+                <div className="filter-section">
+                    <h3 className="filter-title">
                         {
                         /* # Translators: Labels a set of filters to select which data to show */
                          gettext('Report Options') }
                     </h3>
                     <FilterTop />
                 </div>
-                <div id="filter-middle" className="p-3">
-                    <FilterMiddle /> 
+                <div className="filter-section filter-section--lighter">
+                    <FilterMiddle />
                 </div>
-                <div id="filter-bottom"
-                     className="d-flex justify-content-between no-gutters p-3">
+                <div
+                     className="filter-section filter-buttons">
                     <IPTTButton
                         label={
                             /* # Translators: clears all filters set on a report */

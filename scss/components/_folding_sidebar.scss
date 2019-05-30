@@ -1,6 +1,6 @@
 //TODO: breakpoints? min-width?
 //TODO: this should be combined with IPTT style sidebar in _sidebar.scss
-.folding-sidebar { // approximately analog to _sidebar.scs/#sidebar_wrapper
+.folding-sidebar {
     $trigger_width: 40px;
     position: relative;
     margin-right: $trigger_width;
@@ -30,14 +30,25 @@
     }
 }
 
+.filter-title {
+    color: $gray-300;
+    line-height: 42px;
+}
+
 .filter-section {
     background-color: $gray-700;
     max-width: calc(330px - 2rem);
     min-width: calc(330px - 2rem);
     padding: 1rem;
-
     label {
         color: $white;
+    }
+}
+
+.filter-section--lighter {
+    background-color: $gray-300;
+    label {
+        color: $body-color;
     }
 }
 
@@ -54,3 +65,26 @@
     }
 }
 
+
+// Collapse/Collapsing states
+.collapse.show {
+  visibility: visible;
+}
+.collapsing {
+    visibility: visible;
+    height: 0;
+    // TODO: transition mixins
+    -webkit-transition-property: height, visibility;
+    transition-property: height, visibility;
+    -webkit-transition-timing-function: ease;
+    transition-timing-function: ease;
+    &.width {
+        // TODO: transition mixins
+        -webkit-transition-property: width, visibility;
+        transition-property: width, visibility;
+        width: 0;
+        height: 100%;
+        -webkit-transition-timing-function: ease;
+        transition-timing-function: ease;
+    }
+}

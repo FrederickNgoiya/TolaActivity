@@ -7,10 +7,10 @@ import { uniqueId } from '../formUtils';
 export const SingleReactSelect = ( props ) => {
     let selectId = uniqueId('react-select');
     return (
-        <div className="form-row mb-3">
+        <div className="form-row form-group">
             <label
                 htmlFor={ selectId }
-                className="col-form-label text-uppercase">
+                className="">
                     { props.label }
             </label>
             <Select
@@ -47,12 +47,12 @@ export const DateSelect = ( props ) => {
                         return <option value={ option.value } key={ index }>{ option.label }</option>;
                     }
                 );
-                
+
     return (
-        <div className="form-row mb-3">
+        <div className="form-row form-group">
             <label
                 htmlFor={ selectId }
-                className="col-form-label text-uppercase">
+                className="">
                     { props.label }
             </label>
             <select
@@ -63,17 +63,17 @@ export const DateSelect = ( props ) => {
                 disabled = { props.disabled }>
                 { formattedOptions }
             </select>
-        </div>  
+        </div>
     );
 }
 
 export const SingleSelect = ( props ) => {
     let selectId = uniqueId('react-select');
     return (
-        <div className="form-row mb-3">
+        <div className="form-row form-group">
             <label
                 htmlFor={ selectId }
-                className="col-form-label text-uppercase">
+                className="">
                     { props.label }
             </label>
             <select
@@ -160,8 +160,8 @@ export const MultiSelectCheckbox = ( props ) => {
         return <div style={{ display: "inline-block" , float: "right", width: "90%"}}>{props.label}</div>;
     };
     return (
-        <div className="form-row mb-2 tola-react-multiselect-row">
-            <label htmlFor={ selectId } className="col-form-label text-uppercase">
+        <div className="form-row form-group tola-react-multiselect-row">
+            <label htmlFor={ selectId } className="">
                 { props.label }
             </label>
             <ReactMultiSelectCheckboxes

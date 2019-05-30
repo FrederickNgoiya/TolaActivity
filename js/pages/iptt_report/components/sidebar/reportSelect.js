@@ -65,7 +65,7 @@ class TimeframeRadio extends React.Component {
         this.props.filterStore.mostRecent = e.target.value;
     }
     render() {
-        return <div className="form-row mb-3">
+        return <div className="form-row form-group">
                     <div className="col-sm-4">
                         <div className="form-check form-check-inline pt-1">
                             <span className="form-check-input">

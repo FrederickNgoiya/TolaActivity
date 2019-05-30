@@ -3,9 +3,9 @@
 // Could theoretically be used elsewhere
 
 #sidebar {
-    flex-basis: 1;
+    //flex-basis: 1;
     // (commenting out while working on react)overflow: hidden;
-    z-index: 3;
+    //z-index: 3;
     .list-group {
         min-width: 400px;
         background-color: $gray-800;
@@ -73,29 +73,24 @@
 
 @include media-breakpoint-down(md) {
     .iptt_table_wrapper {
-        padding-left: 0;
+        // padding-left: 0;
     }
     #id_span_iptt_date_range {
         display: block;
         padding-left: 45px;
     }
-    .sidebar_wrapper {
-        padding-right: 40px;
-        position: fixed;
-    }
     #sidebar {
-        width: 330px;
-        overflow-y: auto;
-        overflow-x: visible;
-        @include transition(all 0.2 ease);
-        transform: translateX(40);
+        //width: 330px;
+        //overflow-y: auto;
+        //overflow-x: visible;
+        //@include transition(all 0.2 ease);
+        //transform: translateX(40);
         &.show {
-            transform: translateX(0);
+            //transform: translateX(0);
         }
         &::-webkit-scrollbar{
-            width: 0px;
+            //width: 0px;
         }
-        &,
         & .list-group {
             min-width: 35px;
             overflow: visible;
@@ -122,40 +117,8 @@
     }
 }
 
-// Collapse/Collapsing states
-.collapse.show {
-  visibility: visible;
-}
-.collapsing {
-    visibility: visible;
-    height: 0;
-    // TODO: transition mixins
-    -webkit-transition-property: height, visibility;
-    transition-property: height, visibility;
-    -webkit-transition-timing-function: ease;
-    transition-timing-function: ease;
-    &.width {
-        // TODO: transition mixins
-        -webkit-transition-property: width, visibility;
-        transition-property: width, visibility;
-        width: 0;
-        height: 100%;
-        -webkit-transition-timing-function: ease;
-        transition-timing-function: ease;
-    }
-}
-
-// Sidebar toggle
-// See breakpoint element above
-.sidebar_wrapper {
-    // see breakpoint mixin above
-    display: flex;
-}
 
 // IPTT sidebar filter// Hidable side bar filter
-.filter-wrapper {
-    display: flex; // unused?
-}
 #filter-top {
     background-color: $gray-700 !important;
     color: $white;
