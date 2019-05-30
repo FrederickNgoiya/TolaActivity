@@ -20,6 +20,9 @@
         cursor: pointer;
         width: $trigger_width;
         text-align: center;
+        &[aria-expanded=false] svg { // for IPTT only
+            transform: rotate(-180deg); // TODO: ideally do this via JS
+        }
     }
     &__contents {
         will-change: width;

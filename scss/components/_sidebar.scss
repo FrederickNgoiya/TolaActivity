@@ -83,11 +83,6 @@
         padding-right: 40px;
         position: fixed;
     }
-    .sidebar-toggle {
-        position: absolute;
-        top: 0;
-        right: 0;
-    }
     #sidebar {
         width: 330px;
         overflow-y: auto;
@@ -155,23 +150,6 @@
 .sidebar_wrapper {
     // see breakpoint mixin above
     display: flex;
-}
-.sidebar-toggle {
-    display: block;
-    height: 42px;
-    text-align: center;
-    width: 40px;
-    a {
-        background-color: $teal-500;
-        color: white;
-        display: block;
-        font-size: 1.25rem;
-        padding: 0.3em 0.5em; // TODO: what is the usual visual rhythm?
-
-        &[aria-expanded=false] svg {
-            transform: rotate(-180deg); // TODO: ideally do this via JS
-        }
-    }
 }
 
 // IPTT sidebar filter// Hidable side bar filter
