@@ -188,6 +188,22 @@ class Level(models.Model):
             tier = None
         return tier
 
+    @property
+    def display_name(self):
+        """ this returns the level's "name" as displayed on IPTT i.e. Goal: name or Output 1.1: Name"""
+        return u'{tier}{ontology}: {name}'.format(
+            tier=self.leveltier.name,
+            ontology=' {}'.format(self.display_ontology) if self.display_ontology else '',
+            name=self.name
+        )
+
+    def get_children(self):
+        child_levels = []
+        for child_level in self.child_levels.all():
+            child_levels.append(child_level)
+            child_levels += child_level.get_children()
+        return child_levels
+
 
 class LevelAdmin(admin.ModelAdmin):
     list_display = ('name')
@@ -196,12 +212,75 @@ class LevelAdmin(admin.ModelAdmin):
 
 class LevelTier(models.Model):
 
-    PRESETS = {
-        'Mercy Corps standard': (ugettext('Goal'), ugettext('Outcome'), ugettext('Output'), ugettext('Activity')),
-        'European Commission (EC)': (ugettext('Overall Objective'), ugettext('Specific Objective'), ugettext('Purpose'), ugettext('Result'), ugettext('Activity')),
-        'USAID 1': (ugettext('Goal'), ugettext('Purpose'), ugettext('Sub-Purpose'), ugettext('Output'), ugettext('Input')),
-        'USAID 2': (ugettext('Strategic Objective'), ugettext('Intermediate Result'), ugettext('Sub-Intermediate Result'), ugettext('Output'), ugettext('Input')),
-        'USAID FFP': (ugettext('Goal'), ugettext('Purpose'), ugettext('Sub-Purpose'), ugettext('Intermediate Outcome'), ugettext('Output')),
+    TEMPLATES = {
+        'mc_standard': {
+            # Translators: Name of the most commonly used organizational hierarchy of KPIs at Mercy Corps.
+            'name': ugettext('Mercy Corps standard'),
+            'tiers': [
+                # Highest level objective of a project.  High level KPIs can be attached here.
+                ugettext('Goal'),
+                # Below Goals, the 2nd highest organizing level to attach KPIs to.
+                ugettext('Outcome'),
+                # Below Outcome, the 3rd highest organizing level to attach KPIs to. Noun.
+                ugettext('Output'),
+                # Below Output, the lowest organizing level to attach KPIs to.
+                ugettext('Activity')]},
+        'ec': {
+            # Translators: The KPI organizational hierarchy used when we work on EC projects.
+            'name': ugettext('European Commission (EC)'),
+            'tiers': [
+                # Highest level goal of a project.  High level KPIs can be attached here.
+                ugettext('Overall Objective'),
+                # Below Overall Objective, the 2nd highest organizing level to attach KPIs to.
+                ugettext('Specific Objective'),
+                # Below Specific Objective, the 3rd highest organizing level to attach KPIs to.
+                ugettext('Purpose'),
+                # Below Purpose, the 4th highest organizing level to attach KPIs to.
+                ugettext('Result'),
+                # Below Result, the lowest organizing level to attach KPIs to.
+                ugettext('Activity')]},
+        'usaid1': {
+            # Translators: The KPI organizational hierarchy used when we work on certain USAID projects.
+            'name': ugettext('USAID 1'),
+            'tiers': [
+                # Highest level objective of a project.  High level KPIs can be attached here.
+                ugettext('Goal'),
+                # Below Goal, the 2nd highest organizing level to attach KPIs to.
+                ugettext('Purpose'),
+                # Below Purpose, the 3rd highest organizing level to attach KPIs to.
+                ugettext('Sub-Purpose'),
+                # Below Sub-Purpose, the 4th highest organizing level to attach KPIs to. Noun.
+                ugettext('Output'),
+                # Below Output, the lowest organizing level to attach KPIs to. Noun.
+                ugettext('Input')]},
+        'usaid2': {
+            # Translators: The KPI organizational hierarchy used when we work on certain USAID projects.
+            'name': ugettext('USAID 2'),
+            'tiers': [
+                # Highest level goal of a project.  High level KPIs can be attached here.
+                ugettext('Strategic Objective'),
+                # Below Strategic Objective, the 2nd highest organizing level to attach KPIs to.
+                ugettext('Intermediate Result'),
+                # Below Intermediate Result, the 3rd highest organizing level to attach KPIs to.
+                ugettext('Sub-Intermediate Result'),
+                # Below Sub-Intermediate Result, the 4th highest organizing level to attach KPIs to. Noun.
+                ugettext('Output'),
+                # Below Output, the lowest organizing level to attach KPIs to. Noun.
+                ugettext('Input')]},
+        'usaid_ffp': {
+            # Translators: The KPI organizational hierarchy used when we work on USAID Food for Peace projects.
+            'name': ugettext('USAID FFP'),
+            'tiers': [
+                # Highest level bojective of a project.  High level KPIs can be attached here.
+                ugettext('Goal'),
+                # Below Goal, the 2nd highest organizing level to attach KPIs to.
+                ugettext('Purpose'),
+                # Below Purpose, the 3rd highest organizing level to attach KPIs to.
+                ugettext('Sub-Purpose'),
+                # Below Sub-Purpose, the 4th highest organizing level to attach KPIs to.
+                ugettext('Intermediate Outcome'),
+                # Below Intermediate Outcome, the lowest organizing level to attach KPIs to. Noun.
+                ugettext('Output')]},
     }
 
     name = models.CharField(ugettext("Name"), max_length=135, blank=True)
@@ -399,13 +478,17 @@ class IndicatorSortingQSMixin(object):
     def with_logframe_sorting(self):
         numeric_re = r'^[[:space:]]*[0-9]+[[:space:]]*$'
         logframe_re = r'^[[:space:]]*[0-9]+([[.period.]][0-9]+)?'\
-                      '([[.period.]][0-9]+)?([[.period.]][0-9]+)?[[:space:]]*$'
+                      '([[.period.]][0-9]+)?([[.period.]][0-9]+)?([[.period.]])?([a-z]+)?[[:space:]]*$'
         logframe_re2 = r'^[[:space:]]*[0-9]+[[.period.]][0-9]+([[.period.]][0-9]+)?([[.period.]][0-9]+)?[[:space:]]*$'
         logframe_re3 = r'^[[:space:]]*[0-9]+[[.period.]][0-9]+[[.period.]][0-9]+([[.period.]][0-9]+)?[[:space:]]*$'
         logframe_re4 = r'^[[:space:]]*[0-9]+[[.period.]][0-9]+[[.period.]][0-9]+[[.period.]][0-9]+[[:space:]]*$'
 
         qs = self.annotate(
             logsort_type=models.Case(
+                models.When(
+                    level_id__isnull=False,
+                    then=0
+                ),
                 models.When(
                     number__regex=logframe_re,
                     then=1
@@ -419,6 +502,10 @@ class IndicatorSortingQSMixin(object):
             )
         ).annotate(
             logsort_a=models.Case(
+                models.When(
+                    logsort_type=0,
+                    then=models.F('level_order')
+                ),
                 models.When(
                     logsort_type=1,
                     then=DecimalSplit('number', 1)
