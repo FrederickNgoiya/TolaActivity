@@ -111,11 +111,26 @@ class ProgramFactory(DjangoModelFactory):
 
     name = 'Health and Survival for Syrians in Affected Regions'
     gaitid = Sequence(lambda n: "%0030d" % n)
-    country = RelatedFactory(CountryFactory, country='United States', code='US')
     funding_status = LazyAttribute(lambda o: "funded" if o.active else "Inactive")
     _using_results_framework = ProgramM.RF_ALWAYS
     auto_number_indicators = True
     generate_levels = None
+
+    @post_generation
+    def country(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of countries were passed in, use them
+            for country in extracted:
+                self.country.add(country)
+        else:
+            # Create the program with a default country
+            usa = CountryFactory(country='United States', code='US')
+            self.country.add(usa)
+
 
     @post_generation
     def indicators(self, create, extracted, **kwargs):
@@ -374,4 +389,3 @@ def grant_country_access(tolauser, country, role=COUNTRY_ROLE_CHOICES[0][0]):
     )
     access_object.role = role
     access_object.save()
-    

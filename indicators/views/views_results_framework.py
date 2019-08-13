@@ -324,7 +324,7 @@ def save_custom_tiers(request):
             if tier_count != len(set(request.data['tiers'])):
                 raise NotImplementedError(_("Result levels must have unique names."))
 
-            if Level.objects.filter(level_depth=tier_count) > 0:
+            if any(l.level_depth == tier_count for l in Level.objects.filter(program=program)):
                 raise NotImplementedError(_("This level is being used in the results framework."))
 
             for n, template_tier in enumerate(request.data['tiers']):
