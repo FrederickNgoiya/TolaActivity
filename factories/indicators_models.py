@@ -1,4 +1,5 @@
 from random import randint
+from itertools import cycle
 import itertools
 
 import datetime
@@ -183,6 +184,15 @@ class LevelFactory(DjangoModelFactory):
 
     name = Sequence(lambda n: 'Level: {0}'.format(n))
 
+    @classmethod
+    def create_batch(cls, program, tier_count, levels_to_create=8):
+        root_level = cls(program=program, parent=None)
+        levels_cycler = cycle(range(1, tier_count))
+        for n in levels_to_create:
+            level = cls(program=program)
+
+
+
 
 class LevelTierFactory(DjangoModelFactory):
     class Meta:
@@ -200,10 +210,7 @@ class LevelTierFactory(DjangoModelFactory):
 
     @classmethod
     def build_mc_template(cls, program):
-        return [
-            cls(program=program, name=name, tier_depth=count+1)
-            for count, name in enumerate(LevelTierM.get_templates()['mc_standard']['tiers'])
-            ]
+        return cls.create_batch(4, program=program, mc_template=True)
 
 
 class ResultFactory(DjangoModelFactory):

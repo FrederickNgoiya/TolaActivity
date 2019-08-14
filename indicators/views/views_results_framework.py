@@ -316,21 +316,22 @@ def save_custom_tiers(request):
         # Replace both the template and the program-associated level tiers, since there is only
         # one form and it does both.  May need to split this later if custom template creation and
         # tierset saving is split.
+        tier_count = len(request.data['tiers'])
+        if LevelTier.objects.filter(program=program).count() > tier_count and \
+                any(l.level_depth == tier_count for l in Level.objects.filter(program=program)):
+            raise ValidationError(_("Cannot delete a tier that is being used by a level in the results framework."))
+
+        if tier_count != len(set(request.data['tiers'])):
+            raise ValidationError(_("Result levels must have unique names."))
+
         with transaction.atomic():
             LevelTierTemplate.objects.filter(program=program).delete()
             LevelTier.objects.filter(program=program).delete()
 
-            tier_count = len(request.data['tiers'])
-            if tier_count != len(set(request.data['tiers'])):
-                raise NotImplementedError(_("Result levels must have unique names."))
-
-            if any(l.level_depth == tier_count for l in Level.objects.filter(program=program)):
-                raise NotImplementedError(_("This level is being used in the results framework."))
-
             for n, template_tier in enumerate(request.data['tiers']):
                 if len(template_tier) == 0:
                     # Translators:  This is a warning message when users have left an input field blank.
-                    raise NotImplementedError(_("Level names should not be blank"))
+                    raise ValidationError(_("Level names should not be blank"))
 
                 LevelTier.objects.create(
                     program=program,
