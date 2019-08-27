@@ -45,7 +45,7 @@
     <div id="indicator_modal_div" class="modal fade" role="dialog" aria-labelledby="myLargeModalLabel">
       <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content" id="indicator_modal_content" iptt-modal="true">
-    
+
         </div> <!-- modal content -->
       </div>
     </div>
@@ -53,6 +53,8 @@
     {% include 'indicators/indicator_form_common_js.html' %}
     <script>
         let jsContext = {{ js_context|js }};
+        let englishTemplates = {{ englishTemplates|js }};
+        let tierTemplates = {{ tierTemplates|js }};
     </script>
 
     {% render_bundle 'results_framework' %}

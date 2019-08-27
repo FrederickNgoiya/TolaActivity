@@ -12,7 +12,7 @@ import {RootStore} from './models';
 /*
  * Model/Store setup
  */
-const {program, levels, indicators, levelTiers, tierTemplates, englishTemplates, customTemplates, programObjectives, accessLevel, usingResultsFramework} = jsContext;
+const {program, levels, indicators, levelTiers, customTemplates, programObjectives, accessLevel, usingResultsFramework} = JSON.parse(jsContext);
 const rootStore = new RootStore(program, levels, indicators, levelTiers, tierTemplates, englishTemplates, customTemplates, programObjectives, accessLevel, usingResultsFramework);
 /*
  * React components on page

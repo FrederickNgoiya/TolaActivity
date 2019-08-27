@@ -67,8 +67,6 @@ class ResultsFrameworkBuilder(ListView):
             'levels': LevelSerializer(levels, many=True).data,
             'indicators': IndicatorSerializerMinimal(indicators, many=True).data,
             'levelTiers': LevelTierSerializer(tiers, many=True).data,
-            'tierTemplates': translated_templates,
-            'englishTemplates': untranslated_templates,
             'customTemplates': LevelTierTemplateSerializer(custom_tiers).data,
             'programObjectives': ProgramObjectiveSerializer(program.objective_set.all(), many=True).data,
             'accessLevel': role,
@@ -78,8 +76,21 @@ class ResultsFrameworkBuilder(ListView):
         context_data = {
             'program': program,
             'indicator_count': indicators.count(),
-            'js_context': js_context,
+            'js_context': json.dumps(js_context),
+            'englishTemplates': untranslated_templates,
+            'tierTemplates': translated_templates,
+
         }
+
+        with open ('jsContextFixture', 'w') as fh:
+            fh.write(json.dumps(js_context))
+        #
+        # with open ('englishTemplatesFixture', 'w') as fh:
+        #     fh.write(untranslated_templates.__repr__())
+        #
+        # with open('tierTemplatesFixture', 'w') as fh:
+        #     fh.write(translated_templates.__repr__())
+
         return render(request, self.template_name, context_data)
 
 
