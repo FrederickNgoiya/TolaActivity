@@ -50,8 +50,11 @@ router.register(r'tola_management/countryobjective', CountryObjectiveViewset,
 router.register(r'tola_management/countrydisaggregation', CountryDisaggregationViewSet,
                 base_name='tolamanagementcountrydisaggregation')
 
+urlpatterns = []
+if settings.SILK_ENABLED:
+    urlpatterns += [url(r'^silk/', include('silk.urls', namespace='silk'))]
 
-urlpatterns = [
+urlpatterns += [
     url(r'^jsi18n/$', JavaScriptCatalog.as_view(), name='javascript-catalog'),
 
     # rest framework
@@ -132,7 +135,6 @@ urlpatterns = [
 
 
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 
 if settings.DEBUG:
     urlpatterns = [

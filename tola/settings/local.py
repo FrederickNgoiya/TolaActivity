@@ -1,12 +1,15 @@
 """Development settings and globals."""
-import os, yaml
+import os
+import yaml
 
 from base import *
 
-def read_yaml(path):
-    with open(path) as f:
+
+def read_yaml(file_path):
+    with open(file_path) as f:
         data = yaml.load(f, Loader=yaml.FullLoader)
     return data
+
 
 SETTINGS_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_DIR = os.path.abspath(os.path.join(SETTINGS_DIR, os.pardir, os.pardir, 'config'))
@@ -69,36 +72,23 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_OKTA_DOMAINS = ["mercycorps.org"]
 # TOLA_TABLES_USER = app_settings['TOLA_TABLES_USER']
 
 # LOCAL APPS DEPENDING ON SERVER DEBUG FOR DEV BOXES,
-# REPORT BUILDER FOR REPORT SERVER
-DEV_APPS = app_settings.get('DEV_APPS', None)
+DEV_APPS = app_settings.get('DEV_APPS', ())
+INSTALLED_APPS = INSTALLED_APPS + tuple(DEV_APPS)
 
-# silk only for testing locally:
-# LOCAL_APPS = (
-#    'silk',
-# )
-LOCAL_APPS = ()
+LOCAL_MIDDLEWARE = app_settings.get('LOCAL_MIDDLEWARE', ())
+MIDDLEWARE = MIDDLEWARE + tuple(LOCAL_MIDDLEWARE)
 
-#INSTALLED_APPS = INSTALLED_APPS #+ tuple(DEV_APPS)
-INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS
+# Enable Silk profiling
+SILK_ENABLED = app_settings.get('SILK_ENABLED', False)
+SILKY_PYTHON_PROFILER = app_settings.get('SILKY_PYTHON_PROFILER', False)
+SILKY_PYTHON_PROFILER_BINARY = app_settings.get('SILKY_PYTHON_PROFILER_BINARY', False)
 
-# silk only for testing:
-# LOCAL_MIDDLEWARE = (
-#     'silk.middleware.SilkyMiddleware',
-# )
-LOCAL_MIDDLEWARE = ()
-
-MIDDLEWARE =  LOCAL_MIDDLEWARE + MIDDLEWARE
-# SILK_ENABLED = True
-# SILKY_PYTHON_PROFILER = True
-
-MIDDLEWARE =  LOCAL_MIDDLEWARE + MIDDLEWARE
-SILK_ENABLED = True
-
-# LDAP_LOGIN = app_settings['LDAP_LOGIN']
-# LDAP_SERVER = app_settings['LDAP_SERVER']
-# LDAP_PASSWORD = app_settings['LDAP_PASSWORD']
-# LDAP_USER_GROUP = app_settings['LDAP_USER_GROUP']
-# LDAP_ADMIN_GROUP = app_settings['LDAP_ADMIN_GROUP']
+if SILK_ENABLED:
+    LOGGING['loggers']['silk'] = {
+        'handlers': ['file'],
+        'level': 'ERROR',
+        'propagate': True,
+    }
 
 AUTHENTICATION_BACKENDS = app_settings['AUTHENTICATION_BACKENDS']
 
@@ -107,7 +97,7 @@ REPORT_SERVER = app_settings['REPORT_SERVER']
 OFFLINE_MODE = app_settings['OFFLINE_MODE']
 NON_LDAP = app_settings['NON_LDAP']
 
-########## EMAIL SETTINGS
+# EMAIL SETTINGS
 EMAIL_USE_TLS = app_settings.get('EMAIL_USE_TLS', True)
 EMAIL_HOST = app_settings.get('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = app_settings.get('EMAIL_PORT', 587)
@@ -115,7 +105,7 @@ EMAIL_HOST_USER = app_settings['EMAIL_HOST_USER']
 EMAIL_HOST_PASSWORD = app_settings['EMAIL_HOST_PASSWORD']
 DEFAULT_FROM_EMAIL = app_settings.get('DEFAULT_FROM_EMAIL', 'systems@mercycorps.org')
 SERVER_EMAIL = app_settings['SERVER_EMAIL']
-#DEFAULT_TO_EMAIL = 'to email'
+# DEFAULT_TO_EMAIL = 'to email'
 EMAIL_BACKEND = app_settings.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
 
@@ -136,7 +126,7 @@ LOGGING['handlers']['file']['filename'] = app_settings['LOGFILE']
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': app_settings.get('WEBPACK_BUNDLE_DIR_NAME', 'dist/'),
-		'STATS_FILE': os.path.join(SITE_ROOT, app_settings.get('WEBPACK_STATS_FILE', 'webpack-stats-local.json')),
+        'STATS_FILE': os.path.join(SITE_ROOT, app_settings.get('WEBPACK_STATS_FILE', 'webpack-stats-local.json')),
     }
 }
 
