@@ -48,6 +48,8 @@ MANAGERS = ADMINS
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
 DEBUG = False
 
+SILK_ENABLED = False
+
 ########## END DEBUG CONFIGURATION
 
 
