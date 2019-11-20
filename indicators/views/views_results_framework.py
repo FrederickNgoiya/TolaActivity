@@ -176,6 +176,9 @@ def insert_new_level(request):
 
     role = request.user.tola_user.program_role(program.id)
     if request.user.is_anonymous or role != 'high':
+        logger.warn("invalid user attempted to create level, user: {}\nrequest data: {}".format(
+            request.user, request.body)
+        )
         return HttpResponseRedirect('/')
 
     # Update new Level data in preparation for saving
@@ -208,6 +211,9 @@ def insert_new_level(request):
     try:
         new_level.full_clean()
     except ValidationError as e:
+        logger.warn("validation error creating level\n errors: {}\nRequest data: {}".format(
+            e, request.body
+        ))
         return Response(e.message_dict, status=400)
 
     # Now the new level can be saved

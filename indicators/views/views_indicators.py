@@ -150,6 +150,7 @@ class IndicatorFormMixin(object):
         return 'indicators/indicator_form_modal.html'
 
     def form_invalid(self, form):
+        logger.warn("invalid form, errors: {}\nrequest data {}".format(form.errors, self.request.body))
         return JsonResponse(form.errors, status=400)
 
     def noramlize_periodic_target_client_json_dates(self, pt_json):
