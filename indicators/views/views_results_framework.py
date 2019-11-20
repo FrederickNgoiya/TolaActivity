@@ -182,7 +182,11 @@ def insert_new_level(request):
     if request.data['parent'] == "root":
         parent = None
     else:
-        parent = Level.objects.get(id=request.data['parent'])
+        try:
+            parent = Level.objects.get(id=request.data['parent'])
+        except Level.DoesNotExist as e:
+            logger.error("Level not found id {}".format(request.data['parent']))
+            raise type(e)(e.message + "\nrequest data: {}".format(level_data))
     level_data['parent'] = parent
     level_data['program'] = program
     if 'ontology' in request.data:
@@ -217,7 +221,6 @@ def insert_new_level(request):
 
 @api_view(http_method_names=['POST'])
 def save_leveltiers(request):
-    print 'post data', request.data['tiers']
     program = Program.objects.get(id=request.data['program_id'])
     role = request.user.tola_user.program_role(program.id)
     if request.user.is_anonymous or role != 'high':
@@ -234,7 +237,7 @@ def save_leveltiers(request):
 
             tier_obj.save()
     except Exception as e:
-        print 'error is ', e
+        print('error is ', e)
         logger.error(e)
         return JsonResponse({'message': _('Your request could not be processed.')}, status=400)
 

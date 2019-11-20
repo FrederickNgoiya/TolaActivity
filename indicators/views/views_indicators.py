@@ -282,7 +282,10 @@ class IndicatorCreate(IndicatorFormMixin, CreateView):
         self.set_form_guidance()
         self.program = Program.objects.get(pk=kwargs['program'])
         self.level_pk = self.request.GET.get('levelId')
-        return super(IndicatorCreate, self).dispatch(request, *args, **kwargs)
+        try:
+            return super(IndicatorCreate, self).dispatch(request, *args, **kwargs)
+        except Exception as e:
+            raise type(e)(e.message + "\nIndicator create failed: \nRequest method: {}\nRequest data: {}".format(request.method, request.data))
 
     def get_context_data(self, **kwargs):
         context = super(IndicatorCreate, self).get_context_data(**kwargs)
@@ -376,8 +379,11 @@ class IndicatorUpdate(IndicatorFormMixin, UpdateView):
             reset_indicator_target_frequency(indicator)
 
         self.set_form_guidance()
-
-        return super(IndicatorUpdate, self).dispatch(request, *args, **kwargs)
+        # adding logging info:
+        try:
+            return super(IndicatorUpdate, self).dispatch(request, *args, **kwargs)
+        except Exception as e:
+            raise type(e)(e.message + "\nIndicator update failed: \nRequest method: {}\nRequest data: {}".format(request.method, request.data))
 
     @property
     def _form_title_display_str(self):

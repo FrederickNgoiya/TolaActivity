@@ -241,7 +241,7 @@ class Level(models.Model):
         # A root node has parent_id is None, or a parent_id not present in the list (sub-tree)
         level_ids = set(l.id for l in levels)
         root_nodes = [l for l in levels if l.parent_id is None or l.parent_id not in level_ids]
-        assert len(root_nodes) == 1
+        assert len(root_nodes) == 1, "Expected 1 root node, got {} for levels {}".format(root_nodes, level_ids)
         root_node = root_nodes[0]
 
         # ensure levels are ordered by customsort at their given tier
