@@ -285,7 +285,7 @@ class IndicatorCreate(IndicatorFormMixin, CreateView):
         try:
             return super(IndicatorCreate, self).dispatch(request, *args, **kwargs)
         except Exception as e:
-            raise type(e)(e.message + "\nIndicator create failed: \nRequest method: {}\nRequest data: {}".format(request.method, request.data))
+            raise type(e)(e.message + "\nIndicator create failed: \nRequest method: {}\nRequest data: {}".format(request.method, request.body))
 
     def get_context_data(self, **kwargs):
         context = super(IndicatorCreate, self).get_context_data(**kwargs)
@@ -383,7 +383,7 @@ class IndicatorUpdate(IndicatorFormMixin, UpdateView):
         try:
             return super(IndicatorUpdate, self).dispatch(request, *args, **kwargs)
         except Exception as e:
-            raise type(e)(e.message + "\nIndicator update failed: \nRequest method: {}\nRequest data: {}".format(request.method, request.data))
+            raise type(e)(e.message + "\nIndicator update failed: \nRequest method: {}\nRequest data: {}".format(request.method, request.body))
 
     @property
     def _form_title_display_str(self):
