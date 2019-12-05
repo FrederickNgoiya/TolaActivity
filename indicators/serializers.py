@@ -701,7 +701,7 @@ class IPTTExcelRendererBase(object):
     @property
     def filename(self):
         report_date = l10n_date_medium(timezone.now().date())
-        return u'{name} {report_date}.xlsx'.format(name=self.report_name, report_date=report_date)
+        return '{name} {report_date}.xlsx'.format(name=self.report_name.encode('utf-8'), report_date=report_date).decode('utf-8')
 
     @property
     def report_date_range(self):
