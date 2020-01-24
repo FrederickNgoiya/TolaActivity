@@ -76,7 +76,8 @@
     var percentageInput = {% if indicator.unit_of_measure_type == indicator.PERCENTAGE %}true{% else %}false{% endif %};
     
     function updateActuals() {
-        let val = $('#id_achieved').val();
+        let unLocalizer = window.getNumberLocalizer({decimalPlaces: 2, display: false});
+        let val = unLocalizer($('#id_achieved').val());
         $('.actual-value-cell').html(`${val}${percentageInput ? ' %' : ''}`);
         $('.disaggregation-formset').trigger('validateSum');
     }
@@ -155,8 +156,9 @@
     }
     
     function updateActualWithSum() {
+        let reLocalizer = window.getNumberLocalizer({decimalPlaces: 2, display: true});
         let sumValue = $( this ).parents('.actions-container').find('.sum-value-cell').first().html();
-        $('#id_achieved').val(sumValue);
+        $('#id_achieved').val(reLocalizer(sumValue));
         updateActuals();
         $('.disaggregation-formset').trigger('updateSum');
     }

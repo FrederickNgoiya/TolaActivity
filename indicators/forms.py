@@ -384,6 +384,7 @@ class IndicatorForm(forms.ModelForm):
 
 class ResultForm(forms.ModelForm):
     rationale = forms.CharField(required=False)
+    achieved = forms.DecimalField(decimal_places=2, localize=True)
 
     class Meta:
         model = Result

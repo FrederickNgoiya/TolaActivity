@@ -130,6 +130,8 @@
     $("#indicator_results_div").on("change", "#id_achieved", function(e){
         validate_achieved();
     });
+    
+    $("#indicator_results_div").on("keydown", "#id_achieved", window.numberInputValidator);
 
     // on delete button
     $("#indicator_results_div").on("click", "#id_delete_result_btn", function(e) {
@@ -180,8 +182,9 @@
 
     function validate_achieved() {
         const actual = $("#id_achieved");
-
-        if (!actual.val() || !$.isNumeric(actual.val()) || actual.val() < 0) {
+        let unLocalizer = window.getNumberLocalizer({decimalPlaces: 2, display: false});
+        let reLocalizer = window.getNumberLocalizer({decimalPlaces: 2, display: true});
+        if (!actual.val() || !$.isNumeric(unLocalizer(actual.val())) || unLocalizer(actual.val()) < 0) {
             $("#div_id_achieved").addClass('has-error');
             $("#id_achieved").addClass('is-invalid');
             $("#hint_id_achieved").text("{% trans 'Please enter a number with no letters or symbols.'|escapejs %}");
@@ -190,7 +193,9 @@
             $("#div_id_achieved").removeClass('has-error');
             $("#id_achieved").removeClass('is-invalid');
             $("#hint_id_achieved").text(" ");
-            actual.val(Math.round(actual.val() * 100) / 100);
+            console.log("pre val", actual.val());
+            actual.val(reLocalizer(Math.round(unLocalizer(actual.val()) * 100) / 100));
+            console.log("post val", actual.val());
             return true;
         }
     }
